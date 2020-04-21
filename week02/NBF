@@ -1,0 +1,26 @@
+
+
+<Number> ::= "0" | ... | "9"
+
+<DecimalNumber>
+  "0"
+  {{"0" | ... | "9"} <Number>*}
+
+<PrimaryExpression>
+  <DecimalNumber>
+  "(" <LogicalExpression> ")"
+
+<MultiplicativeExpression>
+	<DecimalNumber>
+  <DecimalNumber> "*" <DecimalNumber>
+  <DecimalNumber> "/" <DecimalNumber>
+
+<AdditiveExpression>
+  <MultiplicativeExpression>
+  <AdditiveExpression> "+" <MultiplicativeExpression> 
+  <AdditiveExpression> "-" <MultiplicativeExpression> 
+
+<LogicalExpression>
+  <AdditiveExpression>
+  <LogicalExpression> "||" <AdditiveExpression>
+  <LogicalExpression> "&&" <AdditiveExpression>
