@@ -1,0 +1,29 @@
+{
+  "name": "frontend-01-template",
+  "version": "1.0.0",
+  "description": "## 讲师课件下载地址",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "commit": "git-cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XueMary/Frontend-01-Template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XueMary/Frontend-01-Template/issues"
+  },
+  "homepage": "https://github.com/XueMary/Frontend-01-Template#readme",
+  "devDependencies": {
+    "commitizen": "^4.0.4",
+    "cz-conventional-changelog": "^3.1.0"
+  }
+}

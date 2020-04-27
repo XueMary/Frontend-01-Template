@@ -1,0 +1,44 @@
+Arguments: 
+  /Users/xuejihong/.nvm/versions/node/v10.15.3/bin/node /usr/local/Cellar/yarn/1.15.2/libexec/bin/yarn.js add --save-dev commitizen cz-conventional-changelog
+
+PATH: 
+  /Users/xuejihong/.nvm/versions/node/v10.15.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/xuejihong/.nvm/versions/node/v10.15.3/bin
+
+Yarn version: 
+  1.15.2
+
+Node version: 
+  10.15.3
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, open '/Users/xuejihong/Library/Caches/Yarn/v4/npm-@commitlint-load-8.3.5-3f059225ede92166ba94cf4c48e3d67c8b08b18a/node_modules/@commitlint/load/.yarn-metadata.json'
+
+npm manifest: 
+  {
+    "name": "frontend-01-template",
+    "version": "1.0.0",
+    "description": "## 讲师课件下载地址",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/XueMary/Frontend-01-Template.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/XueMary/Frontend-01-Template/issues"
+    },
+    "homepage": "https://github.com/XueMary/Frontend-01-Template#readme"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
