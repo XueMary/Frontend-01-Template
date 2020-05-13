@@ -44,9 +44,10 @@ ${this.bodyText}`
         });
         client.on('data', (data) => {
           responseParser.receive(data.toString())
-          console.log(responseParser.statusLine)
-          console.log(responseParser.headers)
           // resolve(data.toString());
+          if(responseParser.isFinished){
+            resolve(responseParser.response)
+          }
           client.end();
         });
         client.on('error', (error) => {
@@ -76,10 +77,24 @@ class ResponseParser {
     this.headers = {}
     this.headerName = ''
     this.headerValue = ''
+
+    this.bodyParser = null
+  }
+
+  get isFinished() {
+    return this.bodyParser && this.bodyParser.isFinished
+  }
+  get response() {
+    this.statusLine.match(/HTTP\/1.1 (\d+) ([\s\S]+)/)
+    return {
+      statusCode: RegExp.$1,
+      statusText: RegExp.$2,
+      headers: this.headers,
+      body: this.bodyParser.content
+    }
   }
 
   receive(string) {
-    console.log(string,1111)
     for (let i = 0; i < string.length; i++) {
       this.receiveChar(string.charAt(i))
     }
@@ -102,7 +117,8 @@ class ResponseParser {
       if (char === ':') {
         this.current = this.WAITING_HEADER_SPACE
       } if (char === '\r') {
-        this.current = this.WAITING_BODY
+        this.current = this.WAITING_HEADER_BLOCK_END
+        this.bodyParser = new TrunkBody()
       } else {
         this.headerName += char
       }
@@ -126,6 +142,67 @@ class ResponseParser {
       if (char === '\n') {
         this.current = this.WAITING_HEADER_NAME
       }
+    }
+    else if (this.current === this.WAITING_HEADER_BLOCK_END) {
+      if (char === '\n') {
+        this.current = this.WAITING_BODY
+      }
+    }
+    else if (this.current === this.WAITING_BODY) {
+      this.bodyParser.receiveChar(char)
+    }
+  }
+}
+
+
+class TrunkBody {
+  constructor() {
+    this.WAITING_LENGTH = 0
+    this.WAITING_LENGTH_END = 1
+    this.READING_TRUNK = 2
+    this.WAITING_NEW_LENGTH = 3
+    this.WAITING_NEW_LENGTH_END = 4,
+    this.BODY_END = 5
+
+    this.current = this.WAITING_LENGTH
+    this.length = 0
+    this.content = ''
+    this.isFinished = false
+  }
+  receiveChar(char) {
+    if (this.current === this.WAITING_LENGTH) {
+      if (char === '\r') {
+        this.current = this.WAITING_LENGTH_END
+        if(this.length === 0){
+          this.isFinished = true
+          this.current = this.BODY_END
+        }
+      } else {
+        this.length *= 10
+        this.length += Number(char)
+      }
+    }
+    else if(this.current === this.WAITING_LENGTH_END){
+      if (char === '\n') {
+        this.current = this.READING_TRUNK
+      }
+    }
+    else if(this.current === this.READING_TRUNK){
+      this.content += char
+      this.length--
+      if(this.length===0){
+        this.current = this.WAITING_NEW_LENGTH
+      }
+    }
+    else if(this.current === this.WAITING_NEW_LENGTH){
+      if (char === '\r') {
+        this.current = this.WAITING_NEW_LENGTH_END
+      } 
+    }
+    else if(this.current === this.WAITING_NEW_LENGTH_END){
+      if (char === '\n') {
+        this.current = this.WAITING_LENGTH
+      } 
     }
   }
 }
