@@ -29,18 +29,15 @@ function fileDisplay(filePath) {
             var isFile = stats.isFile();//是文件
             var isDir = stats.isDirectory();//是文件夹
             if (isFile) {
-              // 异步读取
-              fs.readFile(filedir, function (err, data) {
-                if (err) {
-                  return console.error(err);
-                }
-                fs.writeFile(filedir, function (err, data) {
-                  if (err) {
-                    return console.error(err);
-                  }
-                  console.log("异步读取: " +);
-                });
-              });
+              var fd = fs.openSync(filedir, 'a+');
+              var buf = new Buffer('New text');
+              fs.write(fd, buf, 0, buf.length, 0);
+              console.log(filedir)
+              // fs.writeFile(filedir, 'hell', function (err, data) {
+              //   if (err) {
+              //     return console.error(err);
+              //   }
+              // });
             }
             if (isDir) {
               fileDisplay(filedir);//递归，如果是文件夹，就继续遍历该文件夹下面的文件
