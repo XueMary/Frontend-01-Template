@@ -1,6 +1,6 @@
 // css parse
 const css = require('css')
-const layout = require('layout')
+const layout = require('./layout')
 
 let currentToken = null
 let currentAttribute = null
