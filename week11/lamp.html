@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    .lamp {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: gray;
+      transition: 0.5 ease;
+    }
+
+    .red.light {
+      background-color: red;
+    }
+
+    .yellow.light {
+      background-color: yellow;
+    }
+
+    .green.light {
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="lamp green"></div>
+  <div class="lamp yellow"></div>
+  <div class="lamp red"></div>
+
+
+  <button>next</button>
+
+
+  <script>
+    function green() {
+      const lamps = document.getElementsByClassName('lamp')
+      for (let i = 0; i < lamps.length; i++)
+        lamps[i].classList.remove('light')
+
+      document.getElementsByClassName('green')[0].classList.add('light')
+    }
+    function yellow() {
+      const lamps = document.getElementsByClassName('lamp')
+      for (let i = 0; i < lamps.length; i++)
+        lamps[i].classList.remove('light')
+
+      document.getElementsByClassName('yellow')[0].classList.add('light')
+    }
+    function red() {
+      const lamps = document.getElementsByClassName('lamp')
+      for (let i = 0; i < lamps.length; i++)
+        lamps[i].classList.remove('light')
+
+      document.getElementsByClassName('red')[0].classList.add('light')
+    }
+
+    function sleep(t) {
+      return new Promise((resolve, reject) => {
+        setTimeout(resolve, t);
+      })
+    }
+
+    async function go() {
+      while (true) {
+        green()
+        await sleep(1000)
+        yellow()
+        await sleep(200)
+        red()
+        await sleep(500)
+      }
+    }
+    go()
+  </script>
+</body>
+
+</html>
