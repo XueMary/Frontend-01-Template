@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="a">
+    <span>1</span>
+    <span>2</span>
+    <span>3</span>
+    <div>4111</div>
+  </div>
+
+  <script>
+    const aElement = document.getElementById('a')
+    function reverseDom (element) {
+      const range  = new Range()
+      range.selectNodeContents(element)
+      let fragment = range.extractContents()
+
+      let l = fragment.childNodes.length
+      while(l--){
+        fragment.appendChild(fragment.childNodes[l])
+      }
+      element.appendChild(fragment)
+    }
+    reverseDom(aElement)
+  </script>
+</body>
+</html>

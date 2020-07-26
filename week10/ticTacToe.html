@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    #box {
+      width: 310px;
+    }
+
+    #box div {
+      display: inline-block;
+      width: 100px;
+      height: 100px;
+      background-color: aqua;
+      border: 1px solid white;
+      vertical-align: middle;
+      line-height: 100px;
+      font-size: 50px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="box"></div>
+
+  <script>
+    let pattern = [
+      [2, 0, 0],
+      [0, 1, 0],
+      [0, 0, 0]
+    ]
+    current = 1
+
+    function show() {
+      const box = document.getElementById('box')
+      box.innerText = ''
+      pattern.forEach((child, y) => {
+        child.forEach((item, x) => {
+          const el = document.createElement('div')
+          el.innerText =
+            item === 2 ? 'x' :
+              item === 1 ? 'o' :
+                ""
+
+          el.addEventListener('click', () => move(x, y))
+          box.appendChild(el)
+        })
+      })
+    }
+
+    function move(x, y) {
+      pattern[y][x] = current
+      show(pattern)
+      if (check(pattern, current)) {
+        alert('win is ' + (current === 2 ? 'x' : 'o'))
+      }
+      current = 3 - current
+      if (willWin(pattern, current)[0] !== -1) {
+        console.log(current === 2 ? 'x will win' : 'o will win')
+      }
+    }
+
+
+    function check(attr, current) {
+      for (let i = 0; i < 3; i++) {
+        let win = true
+        for (let j = 0; j < 3; j++) {
+          if (attr[i][j] !== current) {
+            win = false;
+            break;
+          }
+        }
+        if (win) {
+          return win
+        }
+      }
+      for (let i = 0; i < 3; i++) {
+        let win = true
+        for (let j = 0; j < 3; j++) {
+          if (attr[j][i] !== current) {
+            win = false;
+            break;
+          }
+        }
+        if (win) {
+          return win
+        }
+      }
+      {
+        let win = true
+        for (let j = 0; j < 3; j++) {
+          if (attr[j][j] !== current) {
+            win = false;
+            break;
+          }
+        }
+        if (win) {
+          return win
+        }
+      }
+      {
+        let win = true
+        for (let j = 0; j < 3; j++) {
+          if (attr[j][2 - j] !== current) {
+            win = false;
+            break;
+          }
+        }
+        if (win) {
+          return win
+        }
+      }
+      return false
+    }
+
+    function clone(pattern) {
+      return JSON.parse(JSON.stringify(pattern))
+    }
+
+
+    function willWin(pattern, current) {
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (pattern[i][j] !== 0) {
+            continue
+          }
+          let tem = clone(pattern)
+          tem[i][j] = current
+          if (check(tem, current)) {
+            return [j, i]
+          }
+        }
+      }
+      return [-1, -1]
+    }
+
+    function bestChoice(pattern, current) {
+      let point = willWin(pattern, current)
+      if (point[0] !== -1) {
+        return {
+          point,
+          result: 1
+        }
+      }
+
+      let result = -1
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (pattern[i][j] !== 0) {
+            continue
+          }
+          let tem = clone(pattern)
+          tem[i][j] = current
+          let opp = bestChoice(tem, 3 - current)
+          if (opp.result >= 0) {
+            point = [j, i]
+            result = - opp.result
+          }
+        }
+      }
+      return {
+        point,
+        result: point[0] !== -1 ? result : 0
+      }
+    }
+
+    show(pattern)
+
+
+  </script>
+</body>
+
+</html>
