@@ -91,7 +91,7 @@
     }
 
 
-    class Sorted {
+    class BinaryHeap {
       constructor(data, compare) {
         this.data = data
         this.compare = compare
@@ -101,20 +101,48 @@
           return
         }
         let min = this.data[0]
-        let minIndex = 0
-
-        for (let i = 0; i < this.data.length; i++) {
-          if (this.compare(this.data[i], min) < 0) {
-            min = this.data[i]
-            minIndex = i
+        let i = 0
+        while (i < this.data.length) {
+          if (i * 2 + 1 > this.data.length - 1) {
+            break
+          }
+          if (i * 2 + 2 > this.data.length - 1) {
+            this.data[i] = this.data[i * 2 + 1]
+            i = i * 2 + 1
+            break
+          }
+          if (this.compare(this.data[i * 2 + 1], this.data[i * 2 + 2]) < 0) {
+            this.data[i] = this.data[i * 2 + 1]
+            i = i * 2 + 1
+          } else {
+            this.data[i] = this.data[i * 2 + 2]
+            i = i * 2 + 2
           }
         }
-        this.data[minIndex] = this.data[this.data.length - 1]
-        this.data.pop()
+        if (i < this.data.length - 1) {
+          this.insertAt(i, this.data.pop())
+        } else {
+          this.data.pop()
+        }
         return min
       }
+      insertAt(i, value) {
+        this.data[i] = value
+        while (this.data[Math.floor((i - 1) / 2)] !== undefined && this.compare(this.data[i], this.data[Math.floor((i - 1) / 2)]) < 0) {
+          [this.data[i], this.data[Math.floor((i - 1) / 2)]] = [this.data[Math.floor((i - 1) / 2)], this.data[i]]
+          i = Math.floor((i - 1) / 2)
+        }
+        while (this.data[i * 2 + 1] !== undefined && this.compare(this.data[i], this.data[i * 2 + 1]) > 0) {
+          [this.data[i], this.data[i * 2 + 1]] = [this.data[i * 2 + 1], this.data[i]]
+          i = i * 2 + 1
+        }
+        while (this.data[i * 2 + 2] !== undefined && this.compare(this.data[i], this.data[i * 2 + 2]) > 0) {
+          [this.data[i], this.data[i * 2 + 2]] = [this.data[i * 2 + 2], this.data[i]]
+          i = i * 2 + 2
+        }
+      }
       insert(value) {
-        this.data.push(value)
+        this.insertAt(this.data.length, value)
       }
       get length() {
         return this.data.length;
@@ -126,12 +154,12 @@
       map = map.slice()
 
       function distance([x, y]) {
-        return (x-end[0]) ** 2 + (y-end[1]) ** 2
+        return (x - end[0]) ** 2 + (y - end[1]) ** 2
       }
 
       document.getElementById('container').children[end[0] + end[1] * 100].style.backgroundColor = 'red'
 
-      const collection = new Sorted([start], (a,b)=> distance(a) - distance(b))
+      const collection = new BinaryHeap([start], (a, b) => distance(a) - distance(b))
       async function insert([x, y], pre) {
         if (x < 0 || y < 0 || x >= 100 || y >= 100) {
           return
@@ -173,7 +201,36 @@
     }
 
 
-    findPatch(map, [0,0], [50, 50])
+    // findPatch(map, [0,0], [50, 50]).then(res=>{
+    //   console.log(res)
+    // })
+
+
+    function optimizationPatch(map) {
+      let star = 0 
+      let end = 0
+      let arr = []
+
+
+      function findOptimizationPatch(a, b) {
+        
+      }
+
+      while(star < map.length){
+        end++
+        if(end > map.length - 1){
+          break
+        }
+        let path = findOptimizationPatch(map[i], end)
+        if(path){
+          arr = path
+        }else{
+          map.splice(star, end - star + 1, ...arr)
+          end = end + arr.length
+          star = end
+        }
+      }
+    }
   </script>
 </body>
 

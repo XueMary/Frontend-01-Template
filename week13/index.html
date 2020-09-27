@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="m">xxx</div>
+
+  <script>
+    
+
+    console.log(style)
+    console.log(style.width)
+    Object.defineProperties(style, {
+      width: {
+          configurable: true,　//表示该属性描述符可以被改变（默认为false）
+          get: function() {
+              console.log('get: ', width)
+              return width
+          },
+          set: function(newValue) {
+              width = newValue;
+              console.log('set: ',width)
+          }
+      },
+    })
+    style.width = '100px'
+    // window.onresize = function() {
+    //   console.log(style.width)
+    // }
+
+    const handlers = new Map
+    const reacts = []
+    function reactivity(obj) {
+      return new Proxy(obj, {
+        get(obj, prop) {
+          reacts.push([obj, prop])
+          return obj[prop]
+        },
+        set(obj, prop, value) {
+          obj[prop] = value
+          handlers.get(obj).get(prop).forEach(handler=>handler())
+          return obj[prop]
+        }
+      })
+    }
+
+    function effect(handler) {
+      handler()
+      const item = reacts[reacts.length-1]
+      if(!handlers.get(item[0]))
+        handlers.set(item[0], new Map)
+      if(!handlers.get(item[0]).get(item[0]))
+        handlers.get(item[0]).set(item[1], [])
+      handlers.get(item[0]).get(item[1]).push(handler)
+    }
+
+
+    let obj = {
+      a: 2,
+      c: 1,
+    };
+
+    let temp = 0
+    const counter = reactivity(obj)
+    effect(() => temp = counter.a) 
+    console.log(temp) // 2
+    counter.a = 5;
+    console.log(temp) // 5
+
+  </script>
+</body>
+</html>
